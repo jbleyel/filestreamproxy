@@ -260,7 +260,7 @@ Demuxer::Demuxer(HttpHeader *header) throw(http_trap)
 
 	std::string webif_response = "";
 	for(int retry_count = 0; retry_count < 32; retry_count++) {
-		webif_response = "+0:0:pat,65:pmt,5ff:video,600:audio,25:subtitle,5ff:pcr,25:text";
+		webif_response = "+0:0:pat,65:pmt,5ff:video,600:audio,25:subtitle,5ff:pcr,25:text\n";
 //		webif_response = webif_reauest(webif_request);
 		if (terminated()) {
 			return;
