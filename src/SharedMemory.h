@@ -56,12 +56,14 @@ protected:
 	{
 		mShmFd = shm_open(mShmName.c_str(), O_CREAT | O_RDWR, S_IRWXU | S_IRWXG);
 		if (mShmFd < 0) {
+			ERROR("shm_open error: %d",mShmFd);
 			return false;
 		}
 		ftruncate(mShmFd, mShmSize);
 
 		mShmData = (T*) mmap(NULL, mShmSize, PROT_READ | PROT_WRITE, MAP_SHARED, mShmFd, 0);
 		if (mShmData == 0) {
+			ERROR("mmap error");
 			return false;
 		}
 		mSemId = sem_open(mSemName.c_str(), O_CREAT, S_IRUSR | S_IWUSR, 1);
