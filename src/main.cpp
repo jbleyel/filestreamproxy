@@ -398,6 +398,13 @@ int main(int argc, char **argv)
 		send_signal(checker_pid, SIGUSR1);
 		exit(-1);
 	}
+	catch (const std::exception &e) {
+		ERROR("Main exception: %s", e.what());
+		std::string error = HttpUtil::http_error(400, "Bad request");
+		streaming_write(error.c_str(), error.length(), true);
+		send_signal(checker_pid, SIGUSR1);
+		exit(-1);
+	}
 	catch (...) {
 		ERROR("unknown exception...");
 		std::string error = HttpUtil::http_error(400, "Bad request");
