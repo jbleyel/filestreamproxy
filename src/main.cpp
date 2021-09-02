@@ -256,8 +256,7 @@ int main(int argc, char **argv)
 	char update_status_command[255] = {0};
 
 	// check shm mount
-	int mountcheckresult = mkdir_mount_devshm()
-	DEBUG("mkdir_mount_devshm :%d", mountcheckresult);
+	int mountcheckresult = mkdir_mount_devshm();
 
 	HttpHeader header;
 	std::string req = HttpHeader::read_request();
@@ -265,6 +264,11 @@ int main(int argc, char **argv)
 	DEBUG("request head :\n%s", req.c_str());
 
 	try {
+
+		if(mountcheckresult != 0) {
+			throw(http_trap("shm mountcheck faild", 400, "Bad Request"));
+		}
+
 		if (req.find("\r\n\r\n") == std::string::npos) {
 			throw(http_trap("no found request done code.", 400, "Bad Request"));
 		}
