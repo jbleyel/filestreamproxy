@@ -12,7 +12,6 @@
 #include <poll.h>
 #include <errno.h>
 #include <signal.h>
-#include <stddef.h>
 
 #include <string>
 
