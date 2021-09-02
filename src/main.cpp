@@ -12,11 +12,13 @@
 #include <poll.h>
 #include <errno.h>
 #include <signal.h>
+#include <stddef.h>
 
 #include <string>
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/mount.h>
 
 #include "Util.h"
 #include "Logger.h"
@@ -51,6 +53,27 @@ static pthread_t source_thread_handle, stream_thread_handle;
 
 pid_t tsp_pid = 0, checker_pid = 0;
 unsigned long last_updated_time = 0;
+
+int mkdir_mount_devshm(void)
+{
+    const char mountpoint[] = "/dev/shm";
+    struct stat s;
+
+    if (stat(mountpoint, &s) == -1) {
+        if (errno == ENOENT) {
+            if (mkdir(mountpoint, 0755))
+                return -1;
+
+            if (mount("tmpfs", mountpoint, "tmpfs", 0, NULL))
+                return -1;
+        } else {
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
 //----------------------------------------------------------------------
 
 void release_webif_record()
@@ -216,6 +239,7 @@ int main(int argc, char **argv)
 			show_help();
 		exit(0);
 	}
+
 	tsp_pid = ::getpid();
 	
 	signal(SIGUSR1, signal_handler_checker);
@@ -232,6 +256,9 @@ int main(int argc, char **argv)
 
 	char update_status_command[255] = {0};
 
+	// check shm mount
+	int mountcheckresult = mkdir_mount_devshm()
+	DEBUG("mkdir_mount_devshm :%d", mountcheckresult);
 
 	HttpHeader header;
 	std::string req = HttpHeader::read_request();
