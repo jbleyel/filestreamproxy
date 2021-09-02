@@ -57,8 +57,8 @@ protected:
 	bool Open()
 	{
 
-		mShmFd = shm_open(mShmName.c_str(), O_CREAT | O_RDWR, REGION_PERMS);
-//		mShmFd = shm_open(mShmName.c_str(), O_CREAT | O_RDWR, S_IRWXU | S_IRWXG);
+//		mShmFd = shm_open(mShmName.c_str(), O_CREAT | O_RDWR, REGION_PERMS);
+		mShmFd = shm_open(mShmName.c_str(), O_CREAT | O_RDWR, S_IRWXU | S_IRWXG);
 		if (mShmFd < 0) {
 			ERROR("shm_open error: %d",mShmFd);
 			return false;

@@ -28,8 +28,8 @@ SessionMap::SessionMap() throw(trap)
 	mShmData = 0;
 	max_encoder_count = Util::get_encoder_count();
 
-	mSemName = "/tsp_session_sem";
-	mShmName = "/tsp_session_shm";
+	mSemName = "tsp_session_sem";
+	mShmName = "tsp_session_shm";
 	mShmSize = sizeof(SessionInfo) * max_encoder_count;
 
 	if (Open() == false)
